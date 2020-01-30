@@ -1,0 +1,11 @@
+*.pyc
+.idea/*
+custom_test/
+log/
+meta.ipynb
+metagen.py
+*.ipynb_checkpoints
+vgg_resnet34.pdf
+*.DS_Store
+*.ipynb
+*.h5

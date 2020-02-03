@@ -5,8 +5,10 @@ def initialize_GPU(args):
     # Initialize GPUs
     import tensorflow as tf
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+    # tf.compat.v1.ConfigProto
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
+    # tf.compat.v1.Session
     session = tf.Session(config=config)
     return session
 

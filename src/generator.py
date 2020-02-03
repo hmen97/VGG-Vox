@@ -56,6 +56,7 @@ class DataGenerator(keras.utils.Sequence):
                                         args=(ID, self.win_length, self.sr, self.hop_length,
                                         self.nfft, self.spec_len)) for ID in list_IDs_temp]
         X = np.expand_dims(np.array([p.get() for p in X]), -1)
+
         y = self.labels[indexes]
         return X, keras.utils.to_categorical(y, num_classes=self.n_classes)
 

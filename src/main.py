@@ -14,7 +14,7 @@ import toolkits
 import argparse
 parser = argparse.ArgumentParser()
 # set up training configuration.
-parser.add_argument('--gpu', default='0', type=str)
+parser.add_argument('--gpu', default='', type=str)
 parser.add_argument('--resume', default='', type=str)
 parser.add_argument('--batch_size', default=32, type=int)
 parser.add_argument('--data_path', default='../custom_test', type=str)
@@ -47,8 +47,8 @@ def main():
     # ==================================
     #       Get Train/Val.
     # ==================================
-    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train.txt')
-    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val.txt')
+    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/cust.txt')
+    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/cust_v.txt')
 
     # construct the data generator.
     params = {'dim': (257, 250, 1),

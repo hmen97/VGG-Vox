@@ -47,8 +47,8 @@ def main():
     # ==================================
     #       Get Train/Val.
     # ==================================
-    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/cust.txt')
-    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/cust_v.txt')
+    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train.txt')
+    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val.txt')
 
     # construct the data generator.
     params = {'dim': (257, 250, 1),

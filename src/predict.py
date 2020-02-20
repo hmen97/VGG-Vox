@@ -11,7 +11,7 @@ import logging
 sys.path.append('../tool')
 import toolkits
 #os.chdir('../custom_test/')
-DATASET = '../custom_test'
+DATASET = '../vox1_test_wav/wav/'
 
 import pdb
 # ===========================================
@@ -20,14 +20,14 @@ import pdb
 import argparse
 parser = argparse.ArgumentParser()
 # set up training configuration.
-parser.add_argument('--gpu', default='', type=str)
-parser.add_argument('--resume', default='', type=str)
-parser.add_argument('--batch_size', default=16, type=int)
-parser.add_argument('--data_path', default='/media/weidi/2TB-2/datasets/voxceleb1/wav', type=str)
+parser.add_argument('--gpu', default='0', type=str)
+parser.add_argument('--resume', default='../model/weights-58-0.916.h5', type=str)
+parser.add_argument('--batch_size', default=32, type=int)
+parser.add_argument('--data_path', default='../wav/', type=str)
 # set up network configuration.
 parser.add_argument('--net', default='resnet34s', choices=['resnet34s', 'resnet34l'], type=str)
 parser.add_argument('--ghost_cluster', default=2, type=int)
-parser.add_argument('--vlad_cluster', default=8, type=int)
+parser.add_argument('--vlad_cluster', default=10, type=int)
 parser.add_argument('--bottleneck_dim', default=512, type=int)
 parser.add_argument('--aggregation_mode', default='gvlad', choices=['avg', 'vlad', 'gvlad'], type=str)
 # set up learning rate, training loss and optimizer.
@@ -49,7 +49,7 @@ def main():
     print('==> calculating test({}) data lists...'.format(args.test_type))
 
     if args.test_type == 'normal':
-        verify_list = np.loadtxt('../meta/voxceleb1_veri_test.txt', str)
+        verify_list = np.loadtxt('../meta/veri_test.txt', str)
     elif args.test_type == 'hard':
         verify_list = np.loadtxt('../meta/voxceleb1_veri_test_hard.txt', str)
     elif args.test_type == 'extend':
@@ -116,6 +116,8 @@ def main():
     
     feats = np.array(feats)
 
+    done = 0
+
     # ==> compute the pair-wise similarity.
     for c, (p1, p2) in enumerate(zip(list1, list2)):
         ind1 = np.where(unique_list == p1)[0][0]
@@ -126,7 +128,8 @@ def main():
 
         scores += [np.sum(v1*v2)]
         labels += [verify_lb[c]]
-        print('scores : {}, gt : {}'.format(scores[-1], verify_lb[c]))
+        done += 1
+        print('scores : {}, gt : {}, p1 : {}, p2 : {}'.format(scores[-1], verify_lb[c], p1, p2))
 
     scores = np.array(scores)
     labels = np.array(labels)
@@ -135,13 +138,13 @@ def main():
     np.save(os.path.join(result_path, 'groundtruth_labels.npy'), labels)
 
     eer, thresh = toolkits.calculate_eer(labels, scores)
-    print('==> model : {}, EER: {}, thresh: {}'.format(args.resume, eer, thresh))
+    print('==> model : {}, EER: {}, thresh: {}, done: {}'.format(args.resume, eer, thresh, done))
 
 
 def set_result_path(args):
     model_path = args.resume
-    exp_path = model_path.split(os.sep)
-    result_path = os.path.join('../result', exp_path[2], exp_path[3])
+    # exp_path = model_path.split(os.sep)
+    result_path = os.path.join('../result')
     if not os.path.exists(result_path): os.makedirs(result_path)
     return result_path
 

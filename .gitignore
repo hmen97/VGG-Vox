@@ -1,11 +1,15 @@
-*.pyc
 .idea/*
 custom_test/
+result/
 log/
+model/
+wav/
 meta.ipynb
 metagen.py
-*.ipynb_checkpoints
 vgg_resnet34.pdf
+*.pyc
+*.ipynb_checkpoints
+*.zip
 *.DS_Store
 *.ipynb
 *.h5

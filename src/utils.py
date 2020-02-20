@@ -1,20 +1,20 @@
-# Third Party
 import librosa
 import numpy as np
 import tensorflow as tf
 
-# ===============================================
-#       code from Arsha for loading data.
-# ===============================================
+
 def load_wav(vid_path, sr, mode='train'):
     wav, sr_ret = librosa.load(vid_path, sr=sr)
     assert sr_ret == sr
     if mode == 'train':
+        #appending the wav file to itself
         extended_wav = np.append(wav, wav)
         if np.random.random() < 0.3:
+            #reversing the audio randomly
             extended_wav = extended_wav[::-1]
         return extended_wav
     else:
+        #appending the reversed audio input to original
         extended_wav = np.append(wav, wav[::-1])
         return extended_wav
 

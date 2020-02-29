@@ -2,6 +2,7 @@
 import keras
 import numpy as np
 import utils as ut
+import multiprocessing as mp
 
 class DataGenerator(keras.utils.Sequence):
     'Generates data for Keras'
@@ -16,6 +17,7 @@ class DataGenerator(keras.utils.Sequence):
         self.mp_pooler = mp_pooler
         self.win_length = win_length
         self.hop_length = hop_length
+        #self.session = session
 
 
         self.labels = labels
@@ -39,6 +41,7 @@ class DataGenerator(keras.utils.Sequence):
         list_IDs_temp = [self.list_IDs[k] for k in indexes]
 
         # Generate data
+        # mp.set_start_method('spawn', force=True)
         X, y = self.__data_generation_mp(list_IDs_temp, indexes)
 
         return X, y
@@ -55,6 +58,7 @@ class DataGenerator(keras.utils.Sequence):
         X = [self.mp_pooler.apply_async(ut.load_data,
                                         args=(ID, self.win_length, self.sr, self.hop_length,
                                         self.nfft, self.spec_len)) for ID in list_IDs_temp]
+        # X = tf.compat.v1.expand_dims(tf.convert_to_tensor(wav, p.get() for p in X], -1)
         X = np.expand_dims(np.array([p.get() for p in X]), -1)
 
         y = self.labels[indexes]

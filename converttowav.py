@@ -13,6 +13,8 @@ def convert(filepath):
     file_extension_final = file_extension.replace('.', '')
     filename = filepath.split("/")[-1]
     dirpath = filepath.split("/")[:-1]
+    dirpath = "/".join(dirpath)
+    #print("filename={}, dirpath={}".format(filename, dirpath))
     try:
         track = AudioSegment.from_file(filepath,
                                        file_extension_final)
@@ -26,8 +28,10 @@ def convert(filepath):
 
 
 if __name__=="__main__":
-    files = list(pd.read_csv("data.txt", header=None)[0])
-    print(len(files))
+    files = list(pd.read_csv("datam4a.txt", header=None)[0])
+    #print(len(files))
+    #print(files[0])
+    #convert(files[0])
     with Pool(20) as p:
         print(p.map(convert, files))
 

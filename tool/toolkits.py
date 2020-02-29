@@ -1,15 +1,17 @@
 import os
 import numpy as np
+# import keras
 
 def initialize_GPU(args):
     # Initialize GPUs
-    import tensorflow as tf
     os.environ["CUDA_VISIBLE_DEVICES"] = args.gpu
+    import tensorflow as tf
     # tf.compat.v1.ConfigProto
     config = tf.ConfigProto()
     config.gpu_options.allow_growth = True
     # tf.compat.v1.Session
     session = tf.Session(config=config)
+    # keras.backend.set_session(session)
     return session
 
 def get_chunks(l, n):
@@ -32,6 +34,7 @@ def debug_generator(generator):
 # set up multiprocessing
 def set_mp(processes=8):
     import multiprocessing as mp
+    # mp.set_start_method('spawn', force=True)
 
     def init_worker():
         import signal

@@ -2,8 +2,9 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
-import keras
 import numpy as np
+import multiprocessing as mp
+import keras
 
 sys.path.append('../tool')
 import toolkits
@@ -18,7 +19,7 @@ parser.add_argument('--gpu', default='', type=str)
 parser.add_argument('--resume', default='', type=str)
 parser.add_argument('--batch_size', default=32, type=int)
 parser.add_argument('--data_path', default='../custom_test', type=str)
-parser.add_argument('--multiprocess', default=12, type=int)
+parser.add_argument('--multiprocess', default=1, type=int)
 # set up network configuration.
 parser.add_argument('--net', default='resnet34s', choices=['resnet34s', 'resnet34l'], type=str)
 parser.add_argument('--ghost_cluster', default=2, type=int)
@@ -39,16 +40,18 @@ args = parser.parse_args()
 def main():
 
     # gpu configuration
-    toolkits.initialize_GPU(args)
+    session = toolkits.initialize_GPU(args)
 
     import model
     import generator
 
+    # mp.set_start_method('spawn', force=True)
+
     # ==================================
     #       Get Train/Val.
     # ==================================
-    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train.txt')
-    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val.txt')
+    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train_wav.txt')
+    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val_wav.txt')
 
     # construct the data generator.
     params = {'dim': (257, 250, 1),
@@ -62,6 +65,7 @@ def main():
               'batch_size': args.batch_size,
               'shuffle': True,
               'normalize': True,
+            #   'session': session,
               }
 
     # Datasets
@@ -84,10 +88,10 @@ def main():
         else:
             print("==> no checkpoint found at '{}'".format(args.resume))
 
-    print(network.summary())
-    print('==> gpu {} is, training {} images, classes: 0-{} '
-          'loss: {}, aggregation: {}, ohemlevel: {}'.format(args.gpu, len(partition['train']), np.max(labels['train']),
-                                                            args.loss, args.aggregation_mode, args.ohem_level))
+    # print(network.summary())
+    # print('==> gpu {} is, training {} images, classes: 0-{} '
+    #       'loss: {}, aggregation: {}, ohemlevel: {}'.format(args.gpu, len(partition['train']), np.max(labels['train']),
+    #                                                         args.loss, args.aggregation_mode, args.ohem_level))
 
     model_path, log_path = set_path(args)
     normal_lr = keras.callbacks.LearningRateScheduler(step_decay)

@@ -4,6 +4,7 @@ result/
 log/
 model/
 wav/
+dev/
 meta.ipynb
 metagen.py
 vgg_resnet34.pdf
@@ -14,3 +15,5 @@ vgg_resnet34.pdf
 *.ipynb
 *.h5
 *.npy
+*.wav
+*.m4a

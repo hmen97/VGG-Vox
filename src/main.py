@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import print_function
 import os
 import sys
-import keras
+#import keras
 import numpy as np
 
 sys.path.append('../tool')
@@ -43,12 +43,13 @@ def main():
 
     import model
     import generator
+    import keras
 
     # ==================================
     #       Get Train/Val.
     # ==================================
-    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train.txt')
-    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val.txt')
+    trnlist, trnlb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_train_wav.txt')
+    vallist, vallb = toolkits.get_voxceleb2_datalist(args, path='../meta/vox2_val_wav.txt')
 
     # construct the data generator.
     params = {'dim': (257, 250, 1),

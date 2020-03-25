@@ -2,6 +2,7 @@
 .idea/*
 custom_test/
 log/
+data/
 meta.ipynb
 metagen.py
 *.ipynb_checkpoints

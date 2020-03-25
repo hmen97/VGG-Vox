@@ -20,8 +20,11 @@ def load_wav(vid_path, sr, mode='train'):
 
 
 def lin_spectogram_from_wav(wav, hop_length, win_length, n_fft=1024):
-    linear = librosa.stft(wav, n_fft=n_fft, win_length=win_length, hop_length=hop_length) # linear spectrogram
-    return linear.T
+    #linear = librosa.stft(wav, n_fft=n_fft, win_length=win_length, hop_length=hop_length) # linear spectrogram
+    tf_wav = tf.convert_to_tensor(wav, np.float32)
+    tf_linear = tf.signal.stft(signals=tf.compat.v1.squeeze(tf_wav), frame_length=win_length,
+                               frame_step=hop_length, fft_length=n_fft, pad_end=False)
+    return tf_linear.eval(session=tf.compat.v1.Session())
 
 
 def load_data(path, win_length=400, sr=16000, hop_length=160, n_fft=512, spec_len=250, mode='train'):
